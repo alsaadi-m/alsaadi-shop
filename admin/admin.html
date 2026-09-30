@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071426">
+<title>إدارة متجر السعدي</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body class="admin-body admin-locked">
+<div id="adminLogin" class="admin-login-screen">
+  <div class="admin-login-card">
+    <div class="admin-login-logo">S</div>
+    <span class="admin-login-kicker">AL-SAADI SHOP</span>
+    <h1>دخول الإدارة</h1>
+    <p>هذه الصفحة مخصصة لإدارة متجر السعدي.</p>
+    <form id="adminLoginForm" autocomplete="on">
+      <label>اسم المستخدم<input id="adminUsername" name="username" value="admin" autocomplete="username" required></label>
+      <label>كلمة المرور<div class="password-wrap"><input id="adminPassword" name="password" type="password" inputmode="text" autocomplete="current-password" required placeholder="أدخل كلمة المرور"><button type="button" id="toggleAdminPassword" aria-label="إظهار كلمة المرور">◉</button></div></label>
+      <button type="submit" class="primary-admin login-btn">دخول إلى لوحة الإدارة</button>
+      <div id="loginError" class="login-error hidden">اسم المستخدم أو كلمة المرور غير صحيحة.</div>
+      <small class="login-hint">أول دخول: <b>admin</b> / <b>1234</b> — يمكنك تغييرهما من قسم الأمان.</small>
+    </form>
+    <a href="../index.html" class="login-back">العودة إلى المتجر</a>
+  </div>
+</div>
+<div class="admin-shell">
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-brand"><div class="admin-logo">S</div><div><strong>متجر السعدي</strong><small>نظام الإدارة المحلي</small></div></div>
+    <nav class="admin-nav">
+      <button data-page="dashboard" class="active"><span>⌂</span><b>الرئيسية</b></button>
+      <button data-page="settings"><span>⚙</span><b>إعدادات المتجر</b></button>
+      <button data-page="password"><span>⌁</span><b>الأمان وكلمة المرور</b></button>
+      <button data-page="contact"><span>☎</span><b>التواصل</b></button>
+      <button data-page="categories"><span>▦</span><b>التصنيفات</b></button>
+      <button data-page="products"><span>▣</span><b>المنتجات</b></button>
+      <button data-page="orders"><span>🛒</span><b>الطلبات</b></button>
+      <button data-page="backup"><span>⇩</span><b>النسخ الاحتياطي</b></button>
+    </nav>
+    <div class="admin-sidebar-foot">بيانات محلية على هذا الجهاز</div>
+  </aside>
+
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <button id="menuToggle" class="mobile-menu" aria-label="القائمة">☰</button>
+      <div><span class="admin-kicker">AL-SAADI SHOP</span><h1 id="pageTitle">الرئيسية</h1></div>
+      <div class="admin-top-actions"><a href="../index.html" class="admin-store-link" title="فتح المتجر">⌂ <span>المتجر</span></a><button id="logoutAdmin" class="logout-admin" type="button" title="تسجيل الخروج">↪ <span>خروج</span></button></div>
+    </header>
+
+    <div id="adminMessage" class="admin-message hidden"></div>
+
+    <section id="page-dashboard" class="admin-page active">
+      <div class="admin-hero"><div><span>لوحة التحكم</span><h2>إدارة متجر السعدي</h2><p>كل البيانات هنا مرتبطة مباشرة بقاعدة <b>AlSaadiShopDB</b> نفسها التي يستخدمها المتجر.</p></div><div class="admin-hero-icon">S</div></div>
+      <div class="admin-stats">
+        <div><span>التصنيفات</span><strong id="statCategories">0</strong><small>تصنيف</small></div>
+        <div><span>المنتجات</span><strong id="statProducts">0</strong><small>منتج</small></div>
+        <div><span>الطلبات</span><strong id="statOrders">0</strong><small>طلب</small></div>
+        <div><span>الطلبات الجديدة</span><strong id="statNewOrders">0</strong><small>جديد</small></div>
+      </div>
+      <div class="admin-card"><div class="card-title"><div><span>آخر الطلبات</span><h3>الطلبات الأخيرة</h3></div><button class="outline-btn" data-go="orders">عرض الكل</button></div><div id="dashboardOrders" class="orders-mini"></div></div>
+    </section>
+
+    <section id="page-settings" class="admin-page">
+      <div class="admin-card"><div class="card-title"><div><span>المظهر</span><h3>إعدادات المتجر</h3></div></div>
+        <div class="admin-form-grid">
+          <label>اسم المتجر<input id="setStoreName"></label>
+          <label>وصف الواجهة<textarea id="setHeroDescription" rows="3"></textarea></label>
+          <label>اسم المالك / المسؤول<input id="setOwnerName"></label>
+          <label>شفافية صورة الخلفية<input id="setHeroOpacity" type="range" min="0" max="1" step="0.01"><small id="opacityValue"></small></label>
+          <label>شكل الأرقام<select id="setNumberMode"><option value="western">1234567890 — غربية</option><option value="arabic">١٢٣٤٥٦٧٨٩٠ — عربية</option></select></label>
+          <label class="check-line"><input id="setSoundEnabled" type="checkbox"> تشغيل أصوات الواجهة</label>
+        </div>
+        <div class="button-row"><button class="primary-admin" id="saveSettings">حفظ الإعدادات</button></div>
+      </div>
+      <div class="admin-card"><div class="card-title"><div><span>الصورة</span><h3>خلفية المتجر</h3></div></div>
+        <div class="upload-row"><input id="heroImageFile" type="file" accept="image/*"><button class="outline-btn" id="saveHeroImage">رفع وحفظ</button><button class="danger-btn" id="deleteHeroImage">حذف الخلفية</button></div>
+        <div id="heroPreview" class="hero-preview"></div>
+      </div>
+    </section>
+
+    <section id="page-password" class="admin-page">
+      <div class="admin-card"><div class="card-title"><div><span>الأمان</span><h3>تغيير كلمة مرور الإدارة</h3></div></div>
+        <div class="admin-form-grid">
+          <label>اسم المستخدم<input id="securityUsername" autocomplete="username"></label>
+          <label>كلمة المرور الحالية<input id="securityCurrentPassword" type="password" autocomplete="current-password"></label>
+          <label>كلمة المرور الجديدة<input id="securityNewPassword" type="password" autocomplete="new-password"></label>
+          <label>تأكيد كلمة المرور<input id="securityConfirmPassword" type="password" autocomplete="new-password"></label>
+        </div>
+        <div class="button-row"><button class="primary-admin" id="saveSecurity" type="button">حفظ بيانات الدخول</button></div>
+        <p class="admin-note">الحماية هنا محلية داخل المتصفح. إذا رفعت الموقع على الإنترنت، هذه الحماية ليست بديلاً عن Backend/مصادقة خادمية حقيقية.</p>
+      </div>
+    </section>
+
+    <section id="page-contact" class="admin-page">
+      <div class="admin-card"><div class="card-title"><div><span>المتجر</span><h3>الهاتف والحسابات</h3></div></div>
+        <div class="admin-form-grid">
+          <label>الهاتف<input id="contactPhone" inputmode="tel"></label>
+          <label>البريد الإلكتروني<input id="contactEmail" type="email"></label>
+          <label>WhatsApp<input id="contactWhatsapp" placeholder="رقم أو رابط WhatsApp"></label>
+          <label>Facebook<input id="contactFacebook" type="url"></label>
+          <label>Instagram<input id="contactInstagram" type="url"></label>
+          <label>TikTok<input id="contactTiktok" type="url"></label>
+          <label>Telegram<input id="contactTelegram" type="url"></label>
+        </div>
+        <div class="button-row"><button class="primary-admin" id="saveContact">حفظ معلومات التواصل</button></div>
+      </div>
+    </section>
+
+    <section id="page-categories" class="admin-page">
+      <div class="admin-card"><div class="card-title"><div><span>المتجر</span><h3>إدارة التصنيفات</h3></div></div>
+        <div class="inline-form"><input id="newCategoryName" placeholder="اسم التصنيف"><input id="newCategoryIcon" placeholder="أيقونة مثل ⚡ أو 💡" maxlength="4"><button class="primary-admin" id="addCategory">إضافة</button></div>
+        <div id="categoriesAdmin" class="admin-list"></div>
+      </div>
+    </section>
+
+    <section id="page-products" class="admin-page">
+      <div class="admin-card"><div class="card-title"><div><span>المخزون</span><h3>إضافة منتج</h3></div></div>
+        <form id="productForm">
+          <input type="hidden" id="editProductId">
+          <div class="admin-form-grid">
+            <label>التصنيف<select id="productCategory"></select></label>
+            <label>اسم المنتج<input id="productName" required></label>
+            <label>السعر<input id="productPrice" type="number" min="0" step="0.01" required></label>
+            <label class="full-admin-field">الوصف<textarea id="productDescription" rows="3"></textarea></label>
+            <label class="full-admin-field">صورة المنتج<input id="productImageFile" type="file" accept="image/*"></label>
+          </div>
+          <div id="productImagePreview" class="product-admin-preview"></div>
+          <div class="button-row"><button class="primary-admin" type="submit" id="productSaveButton">حفظ المنتج</button><button class="outline-btn hidden" type="button" id="cancelProductEdit">إلغاء التعديل</button></div>
+        </form>
+      </div>
+      <div class="admin-card"><div class="card-title"><div><span>المخزون</span><h3>المنتجات الحالية</h3></div><span class="counter-pill" id="productCounter">0</span></div><div id="productsAdmin" class="products-admin-list"></div></div>
+    </section>
+
+    <section id="page-orders" class="admin-page">
+      <div class="admin-card"><div class="card-title"><div><span>الزبائن</span><h3>الطلبات</h3></div><button class="outline-btn" id="refreshOrders">تحديث</button></div><div id="ordersAdmin" class="orders-admin-list"></div></div>
+    </section>
+
+    <section id="page-backup" class="admin-page">
+      <div class="admin-card"><div class="card-title"><div><span>حماية البيانات</span><h3>النسخ الاحتياطي والاسترجاع</h3></div></div>
+        <p class="admin-note">النسخة تشمل الإعدادات والتواصل والتصنيفات والمنتجات والطلبات. لا تحتاج إلى إنترنت.</p>
+        <div class="backup-grid"><button class="primary-admin" id="exportBackup">⇩ تصدير نسخة احتياطية</button><label class="file-button">⇧ استرجاع نسخة<input id="importBackup" type="file" accept="application/json"></label></div>
+        <button class="danger-btn wide" id="clearShopData">حذف بيانات المتجر المحلية</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="cropModal" class="crop-modal hidden"><div class="crop-backdrop"></div><div class="crop-box"><button id="closeCrop" class="crop-close">×</button><h3>معاينة الصورة</h3><canvas id="cropCanvas"></canvas><div class="crop-tools"><label>تكبير<input id="cropZoom" type="range" min="1" max="3" step="0.01" value="1"></label><button id="useCrop" class="primary-admin">استخدام الصورة</button></div></div></div>
+
+<script>
+'use strict';
+
+/* ===== حماية لوحة الإدارة ===== */
+const AUTH_KEY='alsaadiAdminAuthV3';
+const DEFAULT_ADMIN_USER='admin';
+async function sha256(text){
+  const data=new TextEncoder().encode(text);
+  const hash=await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function getAuth(){try{return JSON.parse(localStorage.getItem(AUTH_KEY)||'null')}catch{return null}}
+async function ensureAuth(){
+  let a=getAuth();
+  if(!a){
+    a={username:DEFAULT_ADMIN_USER,hash:await sha256('1234')};
+    localStorage.setItem(AUTH_KEY,JSON.stringify(a));
+  }
+  return a;
+}
+function loggedIn(){return sessionStorage.getItem('alsaadiAdminSession')==='1'}
+function showLogin(){document.body.classList.add('admin-locked');$('adminLogin').classList.remove('hidden')}
+function hideLogin(){document.body.classList.remove('admin-locked');$('adminLogin').classList.add('hidden')}
+async function handleLogin(e){
+  e.preventDefault();
+  const user=$('adminUsername')?.value.trim() || DEFAULT_ADMIN_USER;
+  const pass=$('adminPassword').value;
+  const a=await ensureAuth();
+  const ok=user===a.username && (await sha256(pass))===a.hash;
+  if(ok){sessionStorage.setItem('alsaadiAdminSession','1');$('loginError').classList.add('hidden');hideLogin();await startAdmin();}
+  else {$('loginError').textContent='اسم المستخدم أو كلمة المرور غير صحيحة.';$('loginError').classList.remove('hidden');$('adminPassword').select();}
+}
+function logoutAdmin(){sessionStorage.removeItem('alsaadiAdminSession');location.reload()}
+const DB_NAME='AlSaadiShopDB', DB_VERSION=1;
+let db=null, settings={}, categories=[], products=[], orders=[], imageTarget='product', pendingImage='';
+const DEFAULT_SETTINGS={storeName:'متجر السعدي',heroDescription:'منتجات مختارة بتصميم عصري وتجربة بسيطة.',heroImage:'',heroOpacity:.38,numberMode:'western',soundEnabled:true,contact:{ownerName:'متجر السعدي',phone:'',email:'',whatsapp:'',facebook:'',instagram:'',tiktok:'',telegram:''}};
+const DEFAULT_CATS=[['cat-electric','كهربائيات','⚡'],['cat-lighting','إضاءة ومصابيح','💡'],['cat-sanitary','صحيات','🚿'],['cat-appliances','أجهزة كهربائية','▣'],['cat-solar','الطاقة الشمسية','☀'],['cat-cameras','كاميرات','◉']];
+const $=id=>document.getElementById(id), uid=p=>p+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8), clone=x=>JSON.parse(JSON.stringify(x)), esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,DB_VERSION);r.onupgradeneeded=e=>{const d=e.target.result;['settings','categories','products','orders'].forEach(s=>{if(!d.objectStoreNames.contains(s))d.createObjectStore(s,{keyPath:'id'});});};r.onsuccess=()=>{db=r.result;res()};r.onerror=()=>rej(r.error)})}
+function all(store){return new Promise((res,rej)=>{const r=db.transaction(store,'readonly').objectStore(store).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}
+function put(store,v){return new Promise((res,rej)=>{const t=db.transaction(store,'readwrite');t.objectStore(store).put(v);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+function del(store,id){return new Promise((res,rej)=>{const t=db.transaction(store,'readwrite');t.objectStore(store).delete(id);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+function msg(t,kind='ok'){const e=$('adminMessage');e.textContent=t;e.className='admin-message '+kind;e.classList.remove('hidden');clearTimeout(msg.timer);msg.timer=setTimeout(()=>e.classList.add('hidden'),2800)}
+function money(v){return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+async function load(){await openDB();let s=await all('settings');settings=s[0]?{...clone(DEFAULT_SETTINGS),...s[0],contact:{...DEFAULT_SETTINGS.contact,...(s[0].contact||{})}}:clone(DEFAULT_SETTINGS);categories=await all('categories');products=await all('products');orders=await all('orders');if(!categories.length){for(const [id,name,icon] of DEFAULT_CATS)await put('categories',{id,name,icon,iconImage:'',createdAt:Date.now()});categories=await all('categories')}renderAll()}
+function renderAll(){fillSettings();fillContact();renderCats();fillCategorySelect();renderProducts();renderOrders();renderDashboard();}
+function fillSettings(){ $('setStoreName').value=settings.storeName||'';$('setHeroDescription').value=settings.heroDescription||'';$('setOwnerName').value=settings.contact?.ownerName||'';$('setHeroOpacity').value=settings.heroOpacity??.38;$('opacityValue').textContent=Math.round((settings.heroOpacity??.38)*100)+'%';$('setNumberMode').value=settings.numberMode||'western';$('setSoundEnabled').checked=settings.soundEnabled!==false;$('heroPreview').style.backgroundImage=settings.heroImage?`url(${settings.heroImage})`:''; }
+function fillContact(){const c=settings.contact||{};['phone','email','whatsapp','facebook','instagram','tiktok','telegram'].forEach(k=>{$('contact'+k[0].toUpperCase()+k.slice(1)).value=c[k]||''})}
+function renderCats(){ $('categoriesAdmin').innerHTML=categories.map(c=>`<div class="admin-row"><div class="row-icon">${esc(c.icon||'◈')}</div><div class="row-main"><strong>${esc(c.name)}</strong><small>${esc(c.id)}</small></div><button class="icon-action" data-edit-cat="${esc(c.id)}">✎</button><button class="icon-action danger-text" data-del-cat="${esc(c.id)}">×</button></div>`).join('')||'<div class="empty-admin">لا توجد تصنيفات.</div>';}
+function fillCategorySelect(){ $('productCategory').innerHTML=categories.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('') }
+function renderProducts(){ $('productCounter').textContent=products.length;$('productsAdmin').innerHTML=products.map(p=>{const c=categories.find(x=>x.id===p.category);return `<article class="product-admin-card"><div class="product-admin-image">${p.image?`<img src="${esc(p.image)}">`:'<span>▣</span>'}</div><div class="product-admin-main"><span class="mini-badge">${esc(c?.name||'بدون تصنيف')}</span><h3>${esc(p.name)}</h3><p>${esc(p.description||'')}</p><strong>${money(p.price)}</strong></div><div class="product-admin-actions"><button class="outline-btn" data-edit-product="${esc(p.id)}">✎ تعديل</button><button class="danger-btn" data-del-product="${esc(p.id)}">حذف</button></div></article>`}).join('')||'<div class="empty-admin">لا توجد منتجات.</div>';}
+function renderOrders(){const sorted=[...orders].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));$('ordersAdmin').innerHTML=sorted.map(o=>`<article class="order-admin-card"><div class="order-head"><div><span class="mini-badge">${esc(o.status||'جديد')}</span><h3>طلب ${esc(String(o.id).slice(-8))}</h3></div><small>${new Date(o.createdAt||Date.now()).toLocaleString('de-DE')}</small></div><div class="order-customer"><div><b>الاسم</b><span>${esc(o.customer?.name)}</span></div><div><b>الهاتف</b><span dir="ltr">${esc(o.customer?.phone)}</span></div><div><b>البريد</b><span>${esc(o.customer?.email||'-')}</span></div><div><b>طريقة التواصل</b><span>${esc(o.customer?.contactMethod||'-')}</span></div><div class="full-order"><b>العنوان</b><span>${esc(o.customer?.address||'-')}</span></div><div class="full-order"><b>ملاحظات</b><span>${esc(o.customer?.notes||'-')}</span></div></div><div class="order-items">${(o.items||[]).map(i=>`<div><span>${esc(i.name)}</span><b>${esc(i.quantity)} × ${money(i.price)}</b></div>`).join('')}</div><div class="order-foot"><strong>الإجمالي: ${money(o.total)}</strong><select data-status="${esc(o.id)}"><option ${o.status==='جديد'?'selected':''}>جديد</option><option ${o.status==='قيد المعالجة'?'selected':''}>قيد المعالجة</option><option ${o.status==='مكتمل'?'selected':''}>مكتمل</option><option ${o.status==='ملغى'?'selected':''}>ملغى</option></select><button class="danger-btn" data-del-order="${esc(o.id)}">حذف</button></div></article>`).join('')||'<div class="empty-admin">لا توجد طلبات حتى الآن.</div>';}
+function renderDashboard(){ $('statCategories').textContent=categories.length;$('statProducts').textContent=products.length;$('statOrders').textContent=orders.length;$('statNewOrders').textContent=orders.filter(o=>o.status==='جديد').length;$('dashboardOrders').innerHTML=[...orders].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,5).map(o=>`<div><span>${esc(o.customer?.name||'زبون')}</span><b>${money(o.total)}</b><small>${esc(o.status||'جديد')}</small></div>`).join('')||'<div class="empty-admin">لا توجد طلبات.</div>';}
+function go(page){document.querySelectorAll('.admin-nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.admin-page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));const names={dashboard:'الرئيسية',settings:'إعدادات المتجر',contact:'التواصل',categories:'التصنيفات',products:'المنتجات',orders:'الطلبات',backup:'النسخ الاحتياطي',password:'الأمان وكلمة المرور'};$('pageTitle').textContent=names[page]||page;$('adminSidebar').classList.remove('open');window.scrollTo({top:0,behavior:'smooth'})}
+async function saveSettings(){settings.storeName=$('setStoreName').value.trim()||'متجر السعدي';settings.heroDescription=$('setHeroDescription').value.trim();settings.heroOpacity=Number($('setHeroOpacity').value);settings.numberMode=$('setNumberMode').value;settings.soundEnabled=$('setSoundEnabled').checked;settings.contact={...settings.contact,ownerName:$('setOwnerName').value.trim()};await put('settings',{id:'main',...settings});msg('تم حفظ إعدادات المتجر');}
+async function saveContact(){settings.contact={...settings.contact};['phone','email','whatsapp','facebook','instagram','tiktok','telegram'].forEach(k=>settings.contact[k]=$('contact'+k[0].toUpperCase()+k.slice(1)).value.trim());await put('settings',{id:'main',...settings});msg('تم حفظ معلومات التواصل');}
+function fileData(file,max=1400,quality=.86){return new Promise((res,rej)=>{const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const scale=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*scale));c.height=Math.max(1,Math.round(im.height*scale));c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',quality))};im.onerror=rej;im.src=rd.result};rd.onerror=rej;rd.readAsDataURL(file)})}
+async function saveHero(){const f=$('heroImageFile').files[0];if(!f)return msg('اختر صورة أولاً','error');settings.heroImage=await fileData(f,1200,.76);await put('settings',{id:'main',...settings});fillSettings();msg('تم حفظ خلفية المتجر')}
+async function deleteHero(){settings.heroImage='';await put('settings',{id:'main',...settings});fillSettings();msg('تم حذف الخلفية')}
+async function addCat(){const name=$('newCategoryName').value.trim();if(!name)return msg('اكتب اسم التصنيف','error');const icon=$('newCategoryIcon').value.trim()||'◈';await put('categories',{id:uid('cat'),name,icon,iconImage:'',createdAt:Date.now()});categories=await all('categories');$('newCategoryName').value='';$('newCategoryIcon').value='';renderAll();msg('تمت إضافة التصنيف')}
+async function editCat(id){const c=categories.find(x=>x.id===id);if(!c)return;const name=prompt('اسم التصنيف:',c.name);if(name===null)return;const icon=prompt('الأيقونة:',c.icon||'◈');if(icon===null)return;c.name=name.trim()||c.name;c.icon=icon.trim()||c.icon;await put('categories',c);categories=await all('categories');renderAll();msg('تم تعديل التصنيف')}
+async function delCat(id){if(products.some(p=>p.category===id))return msg('لا يمكن حذف تصنيف مرتبط بمنتجات. غيّر تصنيف المنتجات أولاً.','error');if(!confirm('حذف هذا التصنيف؟'))return;await del('categories',id);categories=await all('categories');renderAll();msg('تم حذف التصنيف')}
+function resetProductForm(){ $('editProductId').value='';$('productForm').reset();fillCategorySelect();$('productImagePreview').innerHTML='';$('productSaveButton').textContent='حفظ المنتج';$('cancelProductEdit').classList.add('hidden');pendingImage='';}
+async function saveProduct(e){e.preventDefault();const id=$('editProductId').value;const old=products.find(p=>p.id===id);let image=old?.image||'';const f=$('productImageFile').files[0];if(f)image=await fileData(f,1200,.76);const p={id:id||uid('product'),category:$('productCategory').value,name:$('productName').value.trim(),description:$('productDescription').value.trim(),price:Number($('productPrice').value||0),image,createdAt:old?.createdAt||Date.now()};if(!p.name)return msg('اكتب اسم المنتج','error');await put('products',p);products=await all('products');resetProductForm();renderAll();msg(id?'تم تعديل المنتج':'تمت إضافة المنتج')}
+function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;$('editProductId').value=p.id;$('productCategory').value=p.category;$('productName').value=p.name;$('productDescription').value=p.description||'';$('productPrice').value=p.price||0;$('productImagePreview').innerHTML=p.image?`<img src="${esc(p.image)}">`:'';$('productSaveButton').textContent='حفظ التعديل';$('cancelProductEdit').classList.remove('hidden');go('products');window.scrollTo({top:0,behavior:'smooth'})}
+async function delProduct(id){if(!confirm('حذف المنتج نهائياً؟'))return;await del('products',id);products=await all('products');renderAll();msg('تم حذف المنتج')}
+async function statusOrder(id,status){const o=orders.find(x=>x.id===id);if(!o)return;o.status=status;await put('orders',o);orders=await all('orders');renderOrders();renderDashboard();msg('تم تحديث حالة الطلب')}
+async function delOrder(id){if(!confirm('حذف الطلب؟'))return;await del('orders',id);orders=await all('orders');renderOrders();renderDashboard();msg('تم حذف الطلب')}
+async function exportBackup(){const data={version:1,createdAt:Date.now(),settings,categories,products,orders};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='متجر-السعدي-نسخة-احتياطية-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);msg('تم تصدير النسخة الاحتياطية')}
+async function importBackup(file){if(!file)return;try{const d=JSON.parse(await file.text());if(!d.settings||!Array.isArray(d.categories)||!Array.isArray(d.products)||!Array.isArray(d.orders))throw Error('ملف غير صالح');if(!confirm('سيتم استبدال بيانات المتجر الحالية. متابعة؟'))return;const oldCats=await all('categories'),oldProds=await all('products'),oldOrders=await all('orders');for(const x of oldCats)await del('categories',x.id);for(const x of oldProds)await del('products',x.id);for(const x of oldOrders)await del('orders',x.id);await put('settings',{id:'main',...d.settings});for(const x of d.categories)await put('categories',x);for(const x of d.products)await put('products',x);for(const x of d.orders)await put('orders',x);await load();msg('تم استرجاع النسخة بنجاح')}catch(e){msg('فشل الاسترجاع: '+e.message,'error')}}
+async function clearData(){if(!confirm('تحذير: حذف كل بيانات المتجر المحلية؟'))return;for(const s of ['settings','categories','products','orders']){for(const x of await all(s))await del(s,x.id)}localStorage.removeItem('alsaadiCart');await load();msg('تم حذف البيانات المحلية')}
+async function saveSecurity(){
+  const current=$('securityCurrentPassword').value;
+  const next=$('securityNewPassword').value;
+  const confirmPass=$('securityConfirmPassword').value;
+  const user=$('securityUsername').value.trim();
+  const a=await ensureAuth();
+  if(!user)return msg('اكتب اسم المستخدم','error');
+  if((await sha256(current))!==a.hash)return msg('كلمة المرور الحالية غير صحيحة','error');
+  if(next.length<4)return msg('كلمة المرور الجديدة يجب أن تكون 4 أحرف/أرقام على الأقل','error');
+  if(next!==confirmPass)return msg('تأكيد كلمة المرور غير مطابق','error');
+  localStorage.setItem(AUTH_KEY,JSON.stringify({username:user,hash:await sha256(next)}));
+  ['securityCurrentPassword','securityNewPassword','securityConfirmPassword'].forEach(id=>$(id).value='');
+  msg('تم تغيير بيانات الدخول بنجاح');
+}
+function init(){document.querySelectorAll('.admin-nav button').forEach(b=>b.onclick=()=>go(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));$('menuToggle').onclick=()=>$('adminSidebar').classList.toggle('open');$('saveSettings').onclick=saveSettings;$('saveContact').onclick=saveContact;$('setHeroOpacity').oninput=e=>$('opacityValue').textContent=Math.round(Number(e.target.value)*100)+'%';$('saveHeroImage').onclick=saveHero;$('deleteHeroImage').onclick=deleteHero;$('addCategory').onclick=addCat;$('productForm').onsubmit=saveProduct;$('cancelProductEdit').onclick=resetProductForm;$('refreshOrders').onclick=async()=>{orders=await all('orders');renderOrders();renderDashboard()};$('exportBackup').onclick=exportBackup;$('importBackup').onchange=e=>importBackup(e.target.files[0]);$('clearShopData').onclick=clearData;$('categoriesAdmin').onclick=e=>{const a=e.target.closest('[data-edit-cat]'),d=e.target.closest('[data-del-cat]');if(a)editCat(a.dataset.editCat);if(d)delCat(d.dataset.delCat)};$('productsAdmin').onclick=e=>{const a=e.target.closest('[data-edit-product]'),d=e.target.closest('[data-del-product]');if(a)editProduct(a.dataset.editProduct);if(d)delProduct(d.dataset.delProduct)};$('ordersAdmin').onchange=e=>{if(e.target.dataset.status)statusOrder(e.target.dataset.status,e.target.value)};$('ordersAdmin').onclick=e=>{const d=e.target.closest('[data-del-order]');if(d)delOrder(d.dataset.delOrder)};$('closeCrop').onclick=()=>closeCrop();$('cropModal').querySelector('.crop-backdrop').onclick=()=>closeCrop();$('productImageFile').onchange=async e=>{const f=e.target.files[0];if(f)$('productImagePreview').innerHTML=`<img src="${esc(await fileData(f,900,.76))}">`};}
+async function startAdmin(){
+  await ensureAuth();
+  init();
+  await load().catch(e=>msg('تعذر فتح قاعدة المتجر: '+e.message,'error'));
+}
+
+(async()=>{
+  $('adminLoginForm').addEventListener('submit',handleLogin);
+  $('toggleAdminPassword').onclick=()=>{const x=$('adminPassword');x.type=x.type==='password'?'text':'password'};
+  if(loggedIn()){hideLogin();await startAdmin()}else{showLogin();}
+})();
+
+function closeCrop(){$('cropModal').classList.add('hidden')}
+</script>
+</body></html>
